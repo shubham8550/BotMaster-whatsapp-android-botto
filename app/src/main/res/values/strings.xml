@@ -4,7 +4,13 @@
     <string name="server_url">https://dev.moryasolarz.com/botmaster/api/</string>
 
 
+    <string name="country_prompt">Choose Identifier</string>
 
+    <string-array name="country_arrays">
+        <item>Contains</item>
+        <item>StartsWith</item>
+
+    </string-array>
 
 
 </resources>

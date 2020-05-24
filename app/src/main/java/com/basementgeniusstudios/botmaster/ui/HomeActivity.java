@@ -1,6 +1,8 @@
 package com.basementgeniusstudios.botmaster.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
     }
     public void openNotificationSettings(View view) {
         startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
