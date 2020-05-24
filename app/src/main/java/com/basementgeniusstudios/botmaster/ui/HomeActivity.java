@@ -11,17 +11,26 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.ListView;
 
 import com.basementgeniusstudios.botmaster.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private ListView configLisV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        configLisV = findViewById(R.id.configsListView);
 
 
     }
@@ -39,5 +48,29 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+    }
+
+    JSONObject DumpData() throws JSONException {
+        JSONObject base=new JSONObject();
+
+        JSONObject data1=new JSONObject();
+        data1.put("rule","Contains");
+        data1.put("query","hii");
+        data1.put("reply","how r u");
+
+        JSONObject data2=new JSONObject();
+        data2.put("rule","StartsWith");
+        data2.put("query","/help");
+        data2.put("reply","StartWith");
+
+
+        JSONArray arr=new JSONArray();
+        arr.put(data1);
+        arr.put(data2);
+
+        base.put("quries",arr);
+        return base;
+        //base.getJSONArray("quries").getJSONObject(0).getString("reply");
+
     }
 }
