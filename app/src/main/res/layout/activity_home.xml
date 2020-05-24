@@ -46,6 +46,7 @@
                     android:layout_weight=".50"
 
                     android:background="@drawable/shape_theme"
+                    android:onClick="openBatterOpt"
                     android:padding="5dp"
                     android:text="Disable\nBattery\nOptimization"
                     android:textColor="#673AB7"
