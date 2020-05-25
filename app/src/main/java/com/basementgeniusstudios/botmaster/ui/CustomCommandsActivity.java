@@ -98,6 +98,8 @@ public class CustomCommandsActivity extends AppCompatActivity {
             jsonArray = jsonObject.getJSONArray("quries");
         }
 
+
+
         @Override
         public int getCount() {
             return jsonArray.length();
@@ -114,7 +116,7 @@ public class CustomCommandsActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
 
             ConfigListViewHolder configListViewHolder;
             if(convertView == null){
@@ -143,7 +145,8 @@ public class CustomCommandsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // code for removing rule from list_view
-                    configLisV.removeViewAt(position);
+                    jsonArray.remove(position);
+                    notifyDataSetChanged();
                 }
             });
 
