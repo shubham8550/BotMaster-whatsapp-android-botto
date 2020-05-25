@@ -63,6 +63,13 @@ public class sync extends Thread{
                     //force login and session destroy
                     AccountManager.isExpired=true;
                     AccountManager.deleteAccFile(context);
+                    try{
+                        Intent i=new Intent(context,LoginActivity.class);
+                        context.startActivity(i);
+                    }catch (Exception e){
+                        Log.d("pokemon","Session Expired");
+                    }
+
 
                 }
 

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.basementgeniusstudios.botmaster.R;
+import com.basementgeniusstudios.botmaster.api.AccountManager;
 import com.basementgeniusstudios.botmaster.config.Res;
 import com.basementgeniusstudios.botmaster.config.conf;
 
@@ -141,6 +143,18 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void logout(View v){
+        AccountManager.isExpired=true;
+        AccountManager.deleteAccFile(HomeActivity.this);
+        try{
+            Intent i=new Intent(HomeActivity.this,LoginActivity.class);
+            HomeActivity.this.startActivity(i);
+            Toast.makeText(this, "Sign out Successfully", Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            Log.d("pokemon","LOGOUT");
+        }
     }
 
     public void openNotificationSettings(View view) {

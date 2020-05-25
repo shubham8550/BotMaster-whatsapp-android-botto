@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
+        new sync(MainActivity.this,getText(R.string.server_url).toString()).start();
         //session retrive
         if(AccountManager.accFileExist(MainActivity.this)){
             try {
