@@ -5,6 +5,7 @@
 
 
     <string name="country_prompt">Choose Identifier</string>
+    <string name="customRulesFile">CustomRules.conf</string>
     <string name="adnime_note"><![CDATA[Enter Admin Names(First Name From Contact List) Here Seprated By <Space> and try to use Unique names]]></string>
 
     <string-array name="country_arrays">

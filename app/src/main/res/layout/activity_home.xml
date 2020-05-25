@@ -178,19 +178,33 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/shape_theme3">
 
+                    <Switch
+                        android:id="@+id/isForGroupSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="4dp"
+                        android:checked="true"
+                        android:text="Also For Groups?"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/ruleAddbtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:background="@drawable/shape_theme"
+                        android:onClick="addRuleonclick"
                         android:text="ADD Rule"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <EditText
-                        android:id="@+id/editText"
+                        android:id="@+id/ruleReply"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
@@ -200,25 +214,25 @@
                         android:hint="Enter your Reply Here"
                         android:inputType="textMultiLine"
                         android:minLines="3"
-                        app:layout_constraintBottom_toTopOf="@+id/spinner"
+                        app:layout_constraintBottom_toTopOf="@+id/ruleSpinner"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@+id/isForGroupSwitch" />
 
                     <Spinner
-                        android:id="@+id/spinner"
+                        android:id="@+id/ruleSpinner"
                         android:layout_width="162dp"
                         android:layout_height="43dp"
                         android:layout_margin="10dp"
-                        android:layout_marginStart="88dp"
+                        android:layout_marginStart="16dp"
 
                         android:background="@drawable/shape_theme2"
                         android:entries="@array/country_arrays"
-                        app:layout_constraintBottom_toTopOf="@+id/button"
+                        app:layout_constraintBottom_toTopOf="@+id/ruleAddbtn"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <EditText
-                        android:id="@+id/editText2"
+                        android:id="@+id/ruleQuery"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_margin="10dp"
@@ -226,10 +240,11 @@
                         android:ems="10"
                         android:hint="Query"
                         android:inputType="textPersonName"
-                        app:layout_constraintBottom_toTopOf="@+id/button"
+                        app:layout_constraintBottom_toTopOf="@+id/ruleAddbtn"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/spinner"
-                        app:layout_constraintTop_toBottomOf="@+id/editText" />
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/ruleSpinner"
+                        app:layout_constraintTop_toBottomOf="@+id/ruleReply" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.cardview.widget.CardView>

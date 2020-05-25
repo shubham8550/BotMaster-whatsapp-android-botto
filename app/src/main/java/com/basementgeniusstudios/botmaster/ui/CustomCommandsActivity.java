@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,19 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.basementgeniusstudios.botmaster.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CustomCommandsActivity extends AppCompatActivity {
 
@@ -48,39 +56,33 @@ public class CustomCommandsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    public void removeRule(int idnex) throws IOException, JSONException {
+        JSONObject base=getJSONObjectFromFileName(getString(R.string.customRulesFile));
+        base.getJSONArray("quries").remove(idnex);
+        savefile(getString(R.string.customRulesFile),base.toString());
+    }
 
     public JSONObject DumpData() throws JSONException {
-        JSONObject base=new JSONObject();
 
-        JSONObject data1=new JSONObject();
-        data1.put("rule","Contains");
-        data1.put("query","hii");
-        data1.put("reply","how r u");
-
-        JSONObject data2=new JSONObject();
-        data2.put("rule","StartsWith");
-        data2.put("query","/help");
-        data2.put("reply","StartWith");
-
-        JSONObject data3=new JSONObject();
-        data3.put("rule","StartsWith");
-        data3.put("query","/help");
-        data3.put("reply","StartWith");
-
-        JSONObject data4=new JSONObject();
-        data4.put("rule","StartsWith");
-        data4.put("query","/help");
-        data4.put("reply","StartWith");
-
-
-        JSONArray arr=new JSONArray();
-        arr.put(data1);
-        arr.put(data2);
-        arr.put(data3);
-        arr.put(data4);
-
-        base.put("quries",arr);
+        JSONObject base=getJSONObjectFromFileName(getString(R.string.customRulesFile));
+        if(base==null){
+            base=new JSONObject();
+//            data1.put("rule","Contains");
+//            data1.put("query","hii");
+//            data1.put("reply","how r u");
+        }
         return base;
+
+//        JSONObject data1=new JSONObject();
+//        data1.put("rule","Contains");
+//        data1.put("query","hii");
+//        data1.put("reply","how r u");
+//
+//        JSONArray arr=new JSONArray();
+//        arr.put(data1);
+//
+//        base.put("quries",arr);
+//        return base;
         //base.getJSONArray("quries").getJSONObject(0).getString("reply");
 
     }
@@ -145,7 +147,18 @@ public class CustomCommandsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // code for removing rule from list_view
-                    jsonArray.remove(position);
+
+                    try {
+                        removeRule(position);
+                        jsonObject=DumpData();
+
+                        jsonArray=jsonObject.getJSONArray("quries");
+                        Toast.makeText(context, "Rule Deleted Successfully", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException | IOException e) {
+                        Toast.makeText(context, "Unknown Error", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                    Log.d("pokemon"," removed on "+String.valueOf(position));
                     notifyDataSetChanged();
                 }
             });
@@ -157,5 +170,49 @@ public class CustomCommandsActivity extends AppCompatActivity {
     static class ConfigListViewHolder{
         TextView rule_query_tv;
         ImageView delete_rule;
+    }
+
+
+//extras
+    public JSONObject getJSONObjectFromFileName(String ffname){
+        File rootFolder = CustomCommandsActivity.this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, ffname);
+        String json = null;
+        try {
+            InputStream is = new FileInputStream(jsonFile);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            //l("Error on converting text to json obj in getJSONObjectFromFileName from file "+ffname);
+        }
+        return null;
+    }
+    public boolean isFileExist(String filss){
+        File rootFolder = CustomCommandsActivity.this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, filss);
+
+        if(jsonFile.exists()){
+            return true;
+        }
+        return false;
+    }
+    public void savefile(String fl, String jsonString) throws IOException {
+        File rootFolder = CustomCommandsActivity.this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, fl);
+        FileWriter writer = new FileWriter(jsonFile);
+        writer.write(jsonString);
+        writer.close();
+        //or IOUtils.closeQuietly(writer);
+
     }
 }

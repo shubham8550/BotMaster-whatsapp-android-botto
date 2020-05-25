@@ -6,11 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -20,9 +22,15 @@ import com.basementgeniusstudios.botmaster.api.AccountManager;
 import com.basementgeniusstudios.botmaster.config.Res;
 import com.basementgeniusstudios.botmaster.config.conf;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
 
@@ -33,13 +41,22 @@ public class HomeActivity extends AppCompatActivity {
     Switch pollswt;
     Switch animangaswt;
     Switch gameswt;
-
+    Spinner ruleSpinner;
+    EditText rulereply;
+    EditText rulequery;
     EditText admintextip;
+    Button rulesavebtn;
     Button adminsavebtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        ruleSpinner=findViewById(R.id.ruleSpinner);
+        rulequery=findViewById(R.id.ruleQuery);
+            rulereply=findViewById(R.id.ruleReply);
+        rulesavebtn=findViewById(R.id.ruleAddbtn);
+        isforgrpswt=findViewById(R.id.isForGroupSwitch);
 
         adminsavebtn=findViewById(R.id.adminsavebutton);
         admintextip=findViewById(R.id.adminsEdittext);
@@ -63,6 +80,38 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(modify_rule_intent);
             }
         });
+    }
+    Switch isforgrpswt;
+    public void addRuleonclick(View view) throws JSONException, IOException {
+
+        if(TextUtils.isEmpty(rulequery.getText().toString()) || TextUtils.isEmpty(rulereply.getText().toString())){
+            Toast.makeText(this, "Invalid Values", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        JSONObject data=getJSONObjectFromFileName(getString(R.string.customRulesFile));
+
+
+        JSONObject data1=new JSONObject();
+        data1.put("rule",ruleSpinner.getSelectedItem().toString());
+        data1.put("query",rulequery.getText().toString());
+        data1.put("reply",rulereply.getText().toString());
+        data1.put("isForGroups",isforgrpswt.isChecked());
+        Toast.makeText(this, data1.toString(), Toast.LENGTH_SHORT).show();
+//
+        if(data==null){
+            data=new JSONObject();
+            data.put("quries",new JSONArray());
+        }
+        data.getJSONArray("quries").put(data1);
+        savefile(getString(R.string.customRulesFile),data.toString());
+        Toast.makeText(this, "Rule Added Successfully", Toast.LENGTH_SHORT).show();
+        rulereply.setText("");
+        rulequery.setText("");
+
+
+
     }
 
 
@@ -171,5 +220,48 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+    }
+
+    //extras
+    public JSONObject getJSONObjectFromFileName(String ffname){
+        File rootFolder = this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, ffname);
+        String json = null;
+        try {
+            InputStream is = new FileInputStream(jsonFile);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            //l("Error on converting text to json obj in getJSONObjectFromFileName from file "+ffname);
+        }
+        return null;
+    }
+    public boolean isFileExist(String filss){
+        File rootFolder = this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, filss);
+
+        if(jsonFile.exists()){
+            return true;
+        }
+        return false;
+    }
+    public void savefile(String fl, String jsonString) throws IOException {
+        File rootFolder = this.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, fl);
+        FileWriter writer = new FileWriter(jsonFile);
+        writer.write(jsonString);
+        writer.close();
+        //or IOUtils.closeQuietly(writer);
+
     }
 }
