@@ -184,7 +184,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:background="@drawable/shape_theme"
-                        android:text="Save"
+                        android:text="ADD Rule"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -238,6 +238,10 @@
                 android:id="@+id/modify_rule_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:elevation="10dp"
+                android:background="@drawable/shape_theme4"
+
                 android:text="Modify Rules" />
 
         </LinearLayout>
