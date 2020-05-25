@@ -122,6 +122,15 @@ public abstract class BasicRequrement {
         }
         return null;
     }
+    public boolean isFileExist(String filss){
+        File rootFolder = context.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, filss);
+
+        if(jsonFile.exists()){
+            return true;
+        }
+        return false;
+    }
     public void l(String ll){
         Log.d("pokemon",ll);
     }

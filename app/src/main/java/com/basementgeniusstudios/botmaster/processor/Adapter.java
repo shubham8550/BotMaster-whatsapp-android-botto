@@ -127,7 +127,7 @@ public class Adapter extends BasicRequrement {
                 "(For Polls)\n" +
                 "2) */createpoll title*\n" +
                 "(For Creation of Poll)\n" +
-                "(Example */createpoll top 10 hero* )" +
+                "(Example */createpoll top 10 hero* )\n" +
                 "3) */g play title*\n" +
                 "(For Snake And Ladder game beta)\n" +
                 "4) */anime animename*\n" +
@@ -142,8 +142,13 @@ public class Adapter extends BasicRequrement {
     }
 
     void adminpollreset(String polltitle) throws IOException, PendingIntent.CanceledException, JSONException {
-        if( admins.contains(sender) ) {
-            savefile(todaysdate+".json",getFile(pollfile));
+        if( sender.contains(admins) ) {
+            try{
+                savefile(todaysdate+".json",getFile(pollfile));
+
+            }catch (Exception e){
+                l("adminpoll reset err :" +e.toString());
+            }
 
             JSONObject base = new JSONObject();
             base.put("title", polltitle);
@@ -168,7 +173,7 @@ public class Adapter extends BasicRequrement {
     }
 
     void adminreplace(String candi) throws IOException, PendingIntent.CanceledException, JSONException {
-        if( admins.contains(sender) ){
+        if( sender.contains(admins) ){
             int index= 55;
             for (int i = 0; i < 9; i++) {
                 if(msg.contains(Integer.toString(i+1))){
@@ -226,7 +231,13 @@ public class Adapter extends BasicRequrement {
 
 
     void getpoll() throws JSONException {
-        JSONObject data = new JSONObject(getFile(pollfile));
+
+        JSONObject data = getJSONObjectFromFileName(pollfile);
+        if(data==null){
+            reply("Welcome \nCreate Your First Poll Using /createpoll poll-title");
+            return;
+        }
+
         l(data.getString("candis")+"************");
         String op="";
         if(data.getString("candis").equals("null")){
@@ -251,6 +262,11 @@ public class Adapter extends BasicRequrement {
     }
 
     private void voteadapter() throws JSONException, IOException {
+        if(!isFileExist(voterslist)){
+            l("poll file not exist so cant vote ");
+            reply("Theres No Poll Going on");
+            return;
+        }
         if (isvoted()){
             reply("*you already voted for this poll*");
             return;
@@ -259,7 +275,7 @@ public class Adapter extends BasicRequrement {
             reply("*you can ony vote from Group*");
             return;
         }
-        JSONObject data = new JSONObject(getFile(pollfile));
+        JSONObject data = getJSONObjectFromFileName(pollfile);
 
         if(data.getString("candis").equals("null")) {
             reply("No candidates Added In Poll");
@@ -281,6 +297,7 @@ public class Adapter extends BasicRequrement {
 
 
         JSONObject data = new JSONObject(getFile(pollfile));
+
 
         int vts=data.getJSONArray("candis").getJSONObject(num).getInt("votes");
 
@@ -311,7 +328,7 @@ public class Adapter extends BasicRequrement {
 
 
     void addcandidate(String candi) throws JSONException, IOException {
-        if( admins.contains(sender) ){
+        if( sender.contains(admins) ){
 
         }else {
             reply("Ask Admin to add "+candi);
@@ -372,6 +389,11 @@ public class Adapter extends BasicRequrement {
     }
     void addvotedlog() throws JSONException, IOException {
         JSONObject data = new JSONObject(getFile(voterslist));
+        if(data==null){
+            data=new JSONObject();
+            data.put("list",new JSONArray());
+
+        }
         data.getJSONArray("list").put(sender);
         savefile(voterslist,data.toString());
     }
