@@ -3,6 +3,7 @@ package com.basementgeniusstudios.botmaster.processor;
 import android.app.PendingIntent;
 import android.content.Context;
 
+import com.basementgeniusstudios.botmaster.R;
 import com.basementgeniusstudios.botmaster.bean.BasicRequrement;
 import com.basementgeniusstudios.botmaster.config.Res;
 import com.basementgeniusstudios.botmaster.config.conf;
@@ -78,9 +79,22 @@ public class Adapter extends BasicRequrement {
 
     }
 
+
    public void Start() throws JSONException, IOException, PendingIntent.CanceledException {
       // l(package_name+" | "+groupname+": "+sender);
       //  l(todaysdate);
+
+        if(isFileExist(context.getString(R.string.customRulesFile))){
+            JSONArray rules=getJSONObjectFromFileName(context.getString(R.string.customRulesFile)).getJSONArray("quries");
+            JSONObject rule;
+            for(int i=0;i<rules.length();i++){
+                rule=rules.getJSONObject(i);
+                if(ruleAdapter(rule)){
+                    return;
+                }
+            }
+
+        }
 
         if(msg.startsWith("/vote") && isPollEnabled ){
             voteadapter();
@@ -116,8 +130,31 @@ public class Adapter extends BasicRequrement {
         }else {
             //here loggin
             //new logging().init(rawmsg,rawsender,rawpackage_name,rawaction,rawcontext);
+            if((msg.contains("https://") || msg.contains("http://")) && isLinkWarnEnabled){
+                reply("*Warning Link Sharing Is Not Allowed*");
+            }
         }
 
+    }
+
+    private Boolean ruleAdapter(JSONObject rule) throws JSONException {
+        boolean  forGroup= rule.getBoolean("isForGroups");
+        if(isFromGroup=false && forGroup==true){
+            return false;
+        }
+        if(rule.getString("rule").equals("Contains")){
+            if(msg.contains(rule.getString("query").toLowerCase())){
+                reply(rule.getString("reply"));
+                return true;
+            }
+        }else if (rule.getString("rule").equals("StartsWith")){
+            if(msg.startsWith(rule.getString("query").toLowerCase())){
+                reply(rule.getString("reply"));
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void help() {
