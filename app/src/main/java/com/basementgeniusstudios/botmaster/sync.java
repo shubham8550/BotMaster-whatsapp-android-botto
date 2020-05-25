@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class sync extends Thread{
-   final public static int frequency=4;
+   final public static int frequency=20;
     private Context context;
     private String server_url;
 
@@ -44,6 +44,7 @@ public class sync extends Thread{
                 Map<String,String> param= new HashMap<String, String>();
         param.put("username", AccountManager.getUsername());
         param.put("token", AccountManager.getToken());
+        param.put("frequency",String.valueOf(frequency));
         //Log.d("pokemon",param.toString());
 
         JSONFetch req=new JSONFetch(context,server_url+"sync.php",param,Request.Method.POST);

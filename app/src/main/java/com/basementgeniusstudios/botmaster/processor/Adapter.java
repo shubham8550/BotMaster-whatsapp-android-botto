@@ -4,6 +4,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 
 import com.basementgeniusstudios.botmaster.bean.BasicRequrement;
+import com.basementgeniusstudios.botmaster.config.Res;
+import com.basementgeniusstudios.botmaster.config.conf;
 import com.basementgeniusstudios.botmaster.processor.dicegame.startdicegame;
 
 import org.json.JSONArray;
@@ -16,8 +18,31 @@ import models.Action;
 
 public class Adapter extends BasicRequrement {
     String rawmsg; String rawsender; String rawpackage_name; Action rawaction; Context rawcontext;
+    JSONObject config;
+    //configs
+    boolean isPollEnabled;
+    boolean isGameEnabled;
+    boolean isLinkWarnEnabled;
+    boolean isAnimeSearchEnabled;
+    String admins;
 
-    public Adapter(String msg, String sender, String package_name, Action action, Context context) {
+    public Adapter(String msg, String sender, String package_name, Action action, Context context) throws JSONException {
+        try {
+            config=new conf(context).getFullConfig();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if(config== null){
+            l("no Config Defined");
+            return;
+        }
+        isPollEnabled=config.getString(Res.poll).equals("true");
+        isGameEnabled=config.getString(Res.game).equals("true");
+        isLinkWarnEnabled=config.getString(Res.warnHTTP).equals("true");
+        isAnimeSearchEnabled=config.getString(Res.animeSearch).equals("true");
+        admins=config.getString(Res.admins);
+
         rawaction=action;
         rawsender=sender;
         rawcontext=context;
@@ -57,31 +82,31 @@ public class Adapter extends BasicRequrement {
       // l(package_name+" | "+groupname+": "+sender);
       //  l(todaysdate);
 
-        if(msg.startsWith("/vote")){
+        if(msg.startsWith("/vote") && isPollEnabled ){
             voteadapter();
-        }else if(msg.startsWith("/poll")){
+        }else if(msg.startsWith("/poll") && isPollEnabled){
             getpoll();
-        }else if(msg.startsWith("/g")){
+        }else if(msg.startsWith("/g") && isGameEnabled){
             new startdicegame().init(rawmsg,rawsender,rawpackage_name,rawaction,rawcontext);
-        }else if(msg.startsWith("/resetpoll")){
+        }else if(msg.startsWith("/resetpoll") && isPollEnabled){
             try {
                 adminpollreset(orimsg.substring(10));
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
-        }else if(msg.startsWith("/add")){
+        }else if(msg.startsWith("/add") && isPollEnabled){
             addcandidate(orimsg.substring(4));
-        }else if(msg.startsWith("/anime")){
+        }else if(msg.startsWith("/anime") && isAnimeSearchEnabled){
             new animesearch(orimsg.substring(6),action,context).start();
-        }else if(msg.startsWith("/manga")){
+        }else if(msg.startsWith("/manga") && isAnimeSearchEnabled){
             new mangasearch(orimsg.substring(6),action,context).start();
-        }else if(msg.startsWith("/character")){
+        }else if(msg.startsWith("/character") && isAnimeSearchEnabled){
                new characterSearch(orimsg.substring(10),action,context).start();
         }else if(msg.startsWith("/help")){
             help();
-        }else if(msg.startsWith("/replace")){
+        }else if(msg.startsWith("/replace") && isPollEnabled){
             adminreplace(msg.substring(10));
-        }else if(msg.startsWith("/createpoll")){
+        }else if(msg.startsWith("/createpoll") && isPollEnabled){
             try {
                 adminpollreset(orimsg.substring(11));;
                // pollcreate(msg.substring(11));
@@ -96,18 +121,28 @@ public class Adapter extends BasicRequrement {
     }
 
     private void help() {
-        String op="Welcome to *Anime Guild of Maharashtra*\n" +
-                "Command List\n" +
+        String op="Welcome to BotMaster\n" +
+                "Basic Command List\n" +
                 "1) */poll*\n" +
                 "(For Polls)\n" +
                 "2) */createpoll title*\n" +
                 "(For Creation of Poll)\n" +
-                "(Example */createpoll top 10 hero* )";
+                "(Example */createpoll top 10 hero* )" +
+                "3) */g play title*\n" +
+                "(For Snake And Ladder game beta)\n" +
+                "4) */anime animename*\n" +
+                "(For anime Search)\n" +
+                "5) */manga manganame*\n" +
+                "(For manga Search)\n" +
+                "6) */character animecharactername*\n" +
+                "(For anime character Search)\n" +
+                "\n\n" +
+                "(^-^) BotMasterK12";
         reply(op);
     }
 
     void adminpollreset(String polltitle) throws IOException, PendingIntent.CanceledException, JSONException {
-        if( (sender.contains("Bholu") || sender.contains("aizen") || sender.contains("meme")) ) {
+        if( admins.contains(sender) ) {
             savefile(todaysdate+".json",getFile(pollfile));
 
             JSONObject base = new JSONObject();
@@ -128,12 +163,12 @@ public class Adapter extends BasicRequrement {
             savefile(voterslist,data.toString());
 
         }else {
-            reply("*You dont have what it takes to use this command bro/sis..*");
+            reply("*You Don't Have Rights To Use This Command [^-^]*");
         }
     }
 
     void adminreplace(String candi) throws IOException, PendingIntent.CanceledException, JSONException {
-        if( (sender.contains("Bholu") || sender.contains("aizen") || sender.contains("meme")) ){
+        if( admins.contains(sender) ){
             int index= 55;
             for (int i = 0; i < 9; i++) {
                 if(msg.contains(Integer.toString(i+1))){
@@ -158,7 +193,7 @@ public class Adapter extends BasicRequrement {
 
 
         }else {
-            reply("*You dont have what it takes to use this command bro/sis..*");
+            reply("*You Don't Have Rights To Use This Command [^-^]*");
         }
     }
     void pollcreate(String polltitle) throws JSONException, PendingIntent.CanceledException, IOException {
@@ -195,9 +230,9 @@ public class Adapter extends BasicRequrement {
         l(data.getString("candis")+"************");
         String op="";
         if(data.getString("candis").equals("null")){
-            op="*Anime Guild of Maharashtra*\n*Title : "+data.getString("title")+"*\n No candidates Added \n use (*\\add candidate-name*) to add candidate";
+            op="*BotMasterK12*\n*Title : "+data.getString("title")+"*\n No candidates Added \n use (*\\add candidate-name*) to add candidate";
         }else {
-            op="*Anime Guild of Maharashtra*\n*Title : "+data.getString("title")+"*\n";
+            op="*BotMasterK12*\n*Title : "+data.getString("title")+"*\n";
             String ls="";
             JSONArray arr=data.getJSONArray("candis");
             for (int i = 0; i < arr.length(); i++) {
@@ -257,7 +292,7 @@ public class Adapter extends BasicRequrement {
         savefile(pollfile,data.toString());
 
         String op;
-        op="*Voted successfully on "+data.getJSONArray("candis").getJSONObject(num).getString("name")+"*\n*Anime Guild of Maharashtra*\n*Title : "+data.getString("title")+"*\n";
+        op="*Voted successfully on "+data.getJSONArray("candis").getJSONObject(num).getString("name")+"*\n*BotMasterK12*\n*Title : "+data.getString("title")+"*\n";
         String ls="";
         JSONArray arr=data.getJSONArray("candis");
         for (int i = 0; i < arr.length(); i++) {
@@ -276,7 +311,7 @@ public class Adapter extends BasicRequrement {
 
 
     void addcandidate(String candi) throws JSONException, IOException {
-        if( (sender.contains("Bholu") || sender.contains("aizen") || sender.contains("meme")) ){
+        if( admins.contains(sender) ){
 
         }else {
             reply("Ask Admin to add "+candi);

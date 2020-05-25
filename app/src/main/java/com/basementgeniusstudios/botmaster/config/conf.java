@@ -20,12 +20,30 @@ public class conf {
 
         this.context = context;
     }
+    public boolean accConfigExist(){
+        File rootFolder = context.getExternalFilesDir(null);
+        File jsonFile = new File(rootFolder, confFileName);
+
+        if(jsonFile.exists()){
+            return true;
+        }
+        return false;
+    }
     public void add( String key, String value) throws JSONException, IOException {
         JSONObject data=getJSONObjectFromFileName(confFileName);
         if(data==null){
             data=new JSONObject();
         }
         data.put(key,value);
+        savefile(confFileName,data.toString());
+
+    }
+    public void add( String key, boolean value) throws JSONException, IOException {
+        JSONObject data=getJSONObjectFromFileName(confFileName);
+        if(data==null){
+            data=new JSONObject();
+        }
+        data.put(key,String.valueOf(value));
         savefile(confFileName,data.toString());
 
     }
@@ -36,6 +54,15 @@ public class conf {
             return null;
         }
         return data.getString(key);
+
+    }
+    public JSONObject getFullConfig() throws JSONException {
+        JSONObject data=getJSONObjectFromFileName(confFileName);
+        if(data==null){
+
+            return null;
+        }
+        return data;
 
     }
     public void savefile(String fl, String jsonString) throws IOException {

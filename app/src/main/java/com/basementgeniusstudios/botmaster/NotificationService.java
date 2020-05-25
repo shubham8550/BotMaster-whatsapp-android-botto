@@ -7,6 +7,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
 import com.basementgeniusstudios.botmaster.api.AccountManager;
+import com.basementgeniusstudios.botmaster.processor.Adapter;
 import com.robj.notificationhelperlibrary.utils.NotificationUtils;
 
 import org.json.JSONException;
@@ -60,7 +61,11 @@ public class NotificationService extends NotificationListenerService {
             String text = extras.getCharSequence("android.text").toString();
             String package_name = sbn.getPackageName();
 
-          //  new Adapter(text,title,package_name,action,context);
+            try {
+                new Adapter(text,title,package_name,action,context);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             Log.d("pokemon",title+" =: "+text);
 
 

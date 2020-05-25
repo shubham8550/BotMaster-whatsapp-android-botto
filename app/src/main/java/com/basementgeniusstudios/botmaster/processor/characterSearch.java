@@ -80,7 +80,7 @@ public class characterSearch extends Thread {
             mang=mang+"  *-* "+((JSONObject) obj.getJSONArray("manga").get(i)).get("name")+"\n";
         }
 
-        String op= "*Anime Guild of Maharashtra*\n"+
+        String op= "*BotMasterK12[^-^]*\n"+
                 "Character Search Result:-"+"\n\n"+
                 "*Name : "+obj.getString("name")+"*\n---- *Anime* ----\n"+
                 anli+"*\n---- *Manga* ----\n"+mang+

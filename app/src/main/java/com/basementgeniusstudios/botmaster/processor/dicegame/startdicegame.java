@@ -63,13 +63,13 @@ public class startdicegame extends BasicRequrement implements BasicStructure {
                     " you can roll dice using command ( */g roll* ) and you can't roll dice multiple times in same round\n\n" +
                     " -1st person to reach 100th square will Win\n" +
                     "*All rules are similar to Snake And Ladders* " +
-                    "\n\n *AGM Aqua*");
+                    "\n\n *BotMasterK12[^-^]*\n");
 
 
 
 
         }else {
-            reply("*You dont have what it takes to use this command bro/sis..*");
+            reply("*You Don't Have Rights To Use This Command [^-^]*");
         }
     }
     int getrandom(){

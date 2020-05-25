@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.basementgeniusstudios.botmaster.api.AccountManager;
+import com.basementgeniusstudios.botmaster.config.Res;
+import com.basementgeniusstudios.botmaster.config.conf;
 import com.basementgeniusstudios.botmaster.ui.HomeActivity;
 import com.basementgeniusstudios.botmaster.ui.LoginActivity;
 import com.basementgeniusstudios.botmaster.ui.SignupActivity;
 
 import org.json.JSONException;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +23,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //init
+        try {
+            initer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
         //session retrive
         if(AccountManager.accFileExist(MainActivity.this)){
@@ -39,6 +53,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    private void initer() throws IOException, JSONException {
+        //conf INIT
+        conf config=new conf(MainActivity.this);
+        if(!config.accConfigExist()){
+            //if config not Exist
+            config.add(Res.animeSearch,"false");
+            config.add(Res.poll,"false");
+            config.add(Res.game,"false");
+            config.add(Res.warnHTTP,"false");
+            config.add(Res.admins,"admins");
+
+        }
+
+    }
+
     public void signup(View v){
         Intent i=new Intent(MainActivity.this, SignupActivity.class);
         startActivity(i);

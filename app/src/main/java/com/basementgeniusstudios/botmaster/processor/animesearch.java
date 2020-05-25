@@ -68,7 +68,7 @@ public class animesearch extends Thread {
     void replyer(JSONObject obj) throws JSONException {
         l(obj.getString("synopsis"));
 
-        String op= "*Anime Guild of Maharashtra*\n"+
+        String op= "*BotMasterK12[^-^]*\n"+
         "Anime Search Result:-"+"\n\n"+
         "*Title : "+obj.getString("title")+"*\n"+
         "Type : "+obj.getString("type")+"\n"+

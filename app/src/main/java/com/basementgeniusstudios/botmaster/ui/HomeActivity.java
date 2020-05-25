@@ -8,22 +8,52 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.basementgeniusstudios.botmaster.R;
+import com.basementgeniusstudios.botmaster.config.Res;
+import com.basementgeniusstudios.botmaster.config.conf;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 import static android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity {
 
     Button modify_rule_button;
+    Switch linkwarnswt;
+    Switch pollswt;
+    Switch animangaswt;
+    Switch gameswt;
 
+    EditText admintextip;
+    Button adminsavebtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        adminsavebtn=findViewById(R.id.adminsavebutton);
+        admintextip=findViewById(R.id.adminsEdittext);
+        linkwarnswt=findViewById(R.id.linkwarnSwitch);
+        pollswt=findViewById(R.id.pollSwitch);
+        animangaswt=findViewById(R.id.animemangaSwitch);
+        gameswt=findViewById(R.id.snakeLadderSwitch);
+        //switches init
+        try {
+            switchInit();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         modify_rule_button = findViewById(R.id.modify_rule_btn);
+
         modify_rule_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,6 +62,87 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void switchInit() throws JSONException {
+        final conf con=new conf(HomeActivity.this);
+
+        admintextip.setText(con.get(Res.admins));
+        linkwarnswt.setChecked( (con.get(Res.warnHTTP).equals("true"))? true:false );
+        pollswt.setChecked( (con.get(Res.poll).equals("true"))? true:false );
+        animangaswt.setChecked( (con.get(Res.animeSearch).equals("true"))? true:false );
+        gameswt.setChecked( (con.get(Res.game).equals("true"))? true:false );
+
+
+        adminsavebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    new conf(HomeActivity.this).add(Res.admins,admintextip.getText().toString());
+                    Toast.makeText(HomeActivity.this, "Save Success", Toast.LENGTH_SHORT).show();
+                } catch (JSONException | IOException e) {
+                    Toast.makeText(HomeActivity.this, "Save Failed", Toast.LENGTH_SHORT).show();
+
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        linkwarnswt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                try {
+                    con.add(Res.warnHTTP,String.valueOf(isChecked));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        pollswt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                try {
+                    con.add(Res.poll,String.valueOf(isChecked));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        animangaswt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                try {
+                    con.add(Res.animeSearch,String.valueOf(isChecked));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        gameswt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                try {
+                    con.add(Res.game,String.valueOf(isChecked));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
     public void openNotificationSettings(View view) {
         startActivity(new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS));
     }
