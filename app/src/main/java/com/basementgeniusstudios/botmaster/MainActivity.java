@@ -32,25 +32,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //Experimentle
+        Intent i=new Intent(MainActivity.this, HomeActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        new sync(MainActivity.this,getText(R.string.server_url).toString()).start();
-        //session retrive
-        if(AccountManager.accFileExist(MainActivity.this)){
-            try {
-                AccountManager.init(MainActivity.this);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        startActivity(i);
 
-            Intent i=new Intent(MainActivity.this, HomeActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            startActivity(i);
-        }else {
-            Intent i=new Intent(MainActivity.this, LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-        }
+//
+//       new sync(MainActivity.this,getText(R.string.server_url).toString()).start();
+//        //session retrive
+//        if(AccountManager.accFileExist(MainActivity.this)){
+//            try {
+//                AccountManager.init(MainActivity.this);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//
+//            Intent i=new Intent(MainActivity.this, HomeActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//
+//            startActivity(i);
+//        }else {
+//            Intent i=new Intent(MainActivity.this, LoginActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(i);
+//        }
 
     }
 

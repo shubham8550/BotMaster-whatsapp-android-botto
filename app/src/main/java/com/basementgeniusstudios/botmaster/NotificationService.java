@@ -30,26 +30,26 @@ public class NotificationService extends NotificationListenerService {
         super.onCreate();
         context = getApplicationContext();
         Log.d("pokemon","on create called");
-        new sync(context,getString(R.string.server_url)).start();
+     //   new sync(context,getString(R.string.server_url)).start();
 
 
 
     }
-    public void syncer(){
-        if(cycle>sync.frequency){
-            cycle=0;
-            Log.d("pokemon","syncing");
-            new sync(context,getText(R.string.server_url).toString()).start();
-        }
-        cycle++;
-    }
+//    public void syncer(){
+//        if(cycle>sync.frequency){
+//            cycle=0;
+//            Log.d("pokemon","syncing");
+//            new sync(context,getText(R.string.server_url).toString()).start();
+//        }
+//        cycle++;
+//    }
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        syncer();
-        if(AccountManager.isExpired){
-            Log.d("pokemon","Expired or data not exist :isEx :"+AccountManager.isExpired);
-            return;
-        }
+      //  syncer();
+//        if(AccountManager.isExpired){
+//            Log.d("pokemon","Expired or data not exist :isEx :"+AccountManager.isExpired);
+//            return;
+//        }
 
         NotificationService.this.cancelNotification(sbn.getKey());
         final Action action = NotificationUtils.getQuickReplyAction(sbn.getNotification(), getPackageName());

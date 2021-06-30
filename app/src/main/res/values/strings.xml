@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BotMaster</string>
     <string name="TAG">pokemon</string>
-    <string name="server_url">https://dev.moryasolarz.com/botmaster/api/</string>
+    <string name="server_url">https://example.com/botmaster/api/</string>
 
 
     <string name="country_prompt">Choose Identifier</string>

@@ -195,15 +195,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void logout(View v){
-        AccountManager.isExpired=true;
-        AccountManager.deleteAccFile(HomeActivity.this);
-        try{
-            Intent i=new Intent(HomeActivity.this,LoginActivity.class);
-            HomeActivity.this.startActivity(i);
-            Toast.makeText(this, "Sign out Successfully", Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            Log.d("pokemon","LOGOUT");
-        }
+        return;
+//        AccountManager.isExpired=true;
+//        AccountManager.deleteAccFile(HomeActivity.this);
+//        try{
+//            Intent i=new Intent(HomeActivity.this,LoginActivity.class);
+//            HomeActivity.this.startActivity(i);
+//            Toast.makeText(this, "Sign out Successfully", Toast.LENGTH_SHORT).show();
+//        }catch (Exception e){
+//            Log.d("pokemon","LOGOUT");
+//        }
     }
 
     public void openNotificationSettings(View view) {
