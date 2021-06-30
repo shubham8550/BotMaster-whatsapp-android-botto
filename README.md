@@ -1,6 +1,6 @@
 # BotMaster-whatsapp-android-botto
 
-> so i never planned to opensource this project so code is messy
+> so when i made this project i never planned to opensource this project so code is messy
 
 > to use this install app - Enable notification access - disable battery optimisation - thats it
 
